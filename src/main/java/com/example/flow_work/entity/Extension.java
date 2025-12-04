@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "extension")
+@Table(name = "extension", uniqueConstraints = {@UniqueConstraint(columnNames = {"ext"})})
 public class Extension {
 
     @Id
@@ -16,13 +16,13 @@ public class Extension {
 
     @NotBlank
     @Size(max = 20)
-    @Column(name = "ext", length = 20, nullable = false)
+    @Column(length = 20, nullable = false, unique = true)
     private String ext; // e.g. "exe" (without dot)
 
-    @Column(name = "blocked", nullable = false)
+    @Column(nullable = false)
     private boolean blocked; // checkbox state (true = 차단)
 
-    @Column(name = "fixed", nullable = false)
+    @Column(nullable = false)
     private boolean fixed; // fixed list vs custom (fixed = true : 고정 확장자)
 
     public Extension() {}
