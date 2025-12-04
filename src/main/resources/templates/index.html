@@ -57,6 +57,13 @@
 
     <div style="margin-top:12px;">
       <h5>커스텀 확장자 목록</h5>
+      <form method="get" action="/">
+        <select name="sort" onchange="this.form.submit()">
+          <option value="id"    th:selected="${sort=='id'}">기본순</option>
+          <option value="name"  th:selected="${sort=='name'}">이름순</option>
+          <option value="recent" th:selected="${sort=='recent'}">최신순</option>
+        </select>
+      </form>
       <div th:each="c : ${customList}">
         <form th:action="@{'/custom/' + ${c.id} + '/delete'}" method="post" style="display:inline-block; margin:6px;">
           <span class="chip" th:text="${c.ext}"></span>

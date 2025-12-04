@@ -12,4 +12,8 @@ public interface ExtensionRepository extends JpaRepository<Extension, Long> {
     List<Extension> findAllByFixedTrueOrderByExtAsc();
     List<Extension> findAllByFixedFalseOrderByExtAsc();
     long countByFixedFalse();
+
+    List<Extension> findByFixedTrue();
+
+    List<Extension> findByFixedFalse();
 }

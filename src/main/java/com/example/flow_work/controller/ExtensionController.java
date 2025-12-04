@@ -1,5 +1,6 @@
 package com.example.flow_work.controller;
 
+import com.example.flow_work.entity.Extension;
 import com.example.flow_work.service.ExtensionService;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class ExtensionController {
@@ -15,11 +18,23 @@ public class ExtensionController {
     private final ExtensionService service;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(
+            @RequestParam(defaultValue = "id") String sort,
+            Model model,
+            @ModelAttribute("msg") String msg,
+            @ModelAttribute("err") String err) {
+
+        model.addAttribute("msg", msg);
+        model.addAttribute("err", err);
+
+        List<Extension> customs = service.getCustomSorted(sort);
+
         model.addAttribute("fixedList", service.getFixed());
-        model.addAttribute("customList", service.getCustom());
+        model.addAttribute("customList", customs);
+        model.addAttribute("sort", sort);
         model.addAttribute("maxLength", 20);
-        model.addAttribute("remainingCustom", 200 - service.getCustom().size());
+        model.addAttribute("remainingCustom", 200 - customs.size());
+
         return "index";
     }
 

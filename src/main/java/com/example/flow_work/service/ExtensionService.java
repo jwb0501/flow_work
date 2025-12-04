@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -20,9 +21,9 @@ public class ExtensionService {
         return repo.findAllByFixedTrueOrderByExtAsc();
     }
 
-    public List<Extension> getCustom() {
-        return repo.findAllByFixedFalseOrderByExtAsc();
-    }
+//    public List<Extension> getCustom() {
+//        return repo.findAllByFixedFalseOrderByExtAsc();
+//    }
 
     @Transactional
     public Extension addCustom(String ext) {
@@ -61,5 +62,30 @@ public class ExtensionService {
                 throw new IllegalArgumentException("요청한 항목은 고정 확장자가 아닙니다.");
             }
         });
+    }
+
+    public List<Extension> getFixedSorted(String sort) {
+        return sortList(repo.findByFixedTrue(), sort);
+    }
+
+    public List<Extension> getCustomSorted(String sort) {
+        return sortList(repo.findByFixedFalse(), sort);
+    }
+
+    private List<Extension> sortList(List<Extension> list, String sort) {
+        return switch (sort) {
+            case "name" -> list.stream()
+                    .sorted(Comparator.comparing(Extension::getExt))
+                    .toList();
+            case "recent" -> list.stream()
+                    .sorted(Comparator.comparing(Extension::getId).reversed())
+                    .toList();
+            case "blocked" -> list.stream()
+                    .sorted(Comparator.comparing(Extension::isBlocked).reversed())
+                    .toList();
+            default -> list.stream()
+                    .sorted(Comparator.comparing(Extension::getId))
+                    .toList();
+        };
     }
 }
