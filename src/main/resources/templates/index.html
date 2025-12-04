@@ -65,7 +65,8 @@
         </select>
       </form>
       <div th:each="c : ${customList}">
-        <form th:action="@{'/custom/' + ${c.id} + '/delete'}" method="post" style="display:inline-block; margin:6px;">
+        <form th:action="@{'/custom/' + ${c.id} + '/delete'}" method="post"
+              onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline-block; margin:6px;">
           <span class="chip" th:text="${c.ext}"></span>
           <button type="submit" class="secondary small">X</button>
         </form>
