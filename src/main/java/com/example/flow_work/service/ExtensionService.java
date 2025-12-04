@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,8 @@ public class ExtensionService {
     private final ExtensionRepository repo;
     private static final int MAX_CUSTOM = 200;
     private static final int MAX_LENGTH = 20;
+
+    private static final Pattern VALID_EXT = Pattern.compile("^[a-zA-Z0-9]+$");
 
     public List<Extension> getFixed() {
         return repo.findAllByFixedTrueOrderByExtAsc();
@@ -39,6 +42,10 @@ public class ExtensionService {
         // 중복 체크
         if (repo.findByExt(clean).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 확장자입니다.");
+        }
+        // 특수문자 체크
+        if (!VALID_EXT.matcher(clean).matches()) {
+            throw new IllegalArgumentException("확장자는 영문/숫자만 입력 가능합니다.");
         }
         Extension e = new Extension(clean, true, false); // 추가하면 기본적으로 차단됨
         return repo.save(e);
