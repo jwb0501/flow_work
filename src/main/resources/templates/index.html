@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>파일 확장자 차단</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mini.css@3.0.1/dist/mini-default.min.css">
+  <script src="/js/main.js" defer></script>
+  <style>
+    .container { max-width: 900px; margin: 20px auto; }
+    .chip { display:inline-block; padding:4px 8px; margin:3px; border-radius:6px; background:#f1f1f1; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>파일 확장자 차단 관리</h2>
+
+  <div th:if="${msg}" class="card success">[[${msg}]]</div>
+  <div th:if="${err}" class="card error">[[${err}]]</div>
+
+  <section>
+    <h4>1) 고정 확장자</h4>
+
+    <div>
+      <form th:each="ext : ${fixedList}"
+            th:action="@{'/fixed/' + ${ext.id} + '/toggle'}"
+            method="post"
+            style="display:inline-block; margin:6px;">
+        <label class="chip">
+          <input type="checkbox"
+                 name="blocked"
+                 th:checked="${ext.blocked}"
+                 onchange="this.form.submit()" />
+          <span th:text="${ext.ext}"></span>
+        </label>
+      </form>
+    </div>
+
+    <p>체크하면 차단됩니다. 체크 해제하면 차단 해제됩니다.</p>
+  </section>
+
+  <hr/>
+
+  <section>
+    <h4>2) 커스텀 확장자 추가 (최대 200개, 확장자 길이 최대 <span th:text="${maxLength}">20</span>)</h4>
+
+    <form th:action="@{/custom/add}" method="post">
+      <div class="row">
+        <div class="col-sm-8">
+          <input type="text" id="extInput" name="ext" placeholder="확장자 입력(ex: sh)" maxlength="20" required/>
+        </div>
+        <div class="col-sm-4">
+          <button type="submit">추가</button>
+        </div>
+      </div>
+    </form>
+    <p th:text="'남은 추가 가능 수: ' + ${remainingCustom}"></p>
+
+    <div style="margin-top:12px;">
+      <h5>커스텀 확장자 목록</h5>
+      <div th:each="c : ${customList}">
+        <form th:action="@{'/custom/' + ${c.id} + '/delete'}" method="post" style="display:inline-block; margin:6px;">
+          <span class="chip" th:text="${c.ext}"></span>
+          <button type="submit" class="secondary small">X</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <hr/>
+</div>
+</body>
+</html>
