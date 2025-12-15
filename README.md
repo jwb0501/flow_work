@@ -20,7 +20,7 @@ http://3.36.65.94/
 
 💾 H2 Database
 - 접속 URL
-  http://localhost:8080/h2-console
+  http://3.36.65.94/h2-console
 
  - JDBC 설정
   JDBC URL: jdbc:h2:mem:extdb
