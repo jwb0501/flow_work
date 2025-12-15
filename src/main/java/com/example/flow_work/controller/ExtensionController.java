@@ -62,7 +62,7 @@ public class ExtensionController {
         return "redirect:/";
     }
 
-    @PostMapping("/custom/{id}/delete")
+    @DeleteMapping("/custom/{id}")
     public String deleteCustom(@PathVariable Long id, RedirectAttributes ra) {
         try {
             service.deleteCustom(id);
